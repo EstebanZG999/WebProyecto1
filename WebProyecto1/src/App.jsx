@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import LoginForm from './LoginForm';
+import SignupForm from './SignupForm';
+import './App.css'; // Asegúrate de importar tus estilos aquí
 
-function App() {
-  const [count, setCount] = useState(0)
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeForm: 'login'
+    };
+  }
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+  setActiveForm = (formName) => {
+    this.setState({ activeForm: formName });
+  }
+
+  render() {
+    const { activeForm } = this.state;
+    return (
+      <div className="forms-section">
+        <h1 className="section-title">Animated Forms</h1>
+        <div className="forms">
+          <div className={`form-wrapper ${activeForm === 'login' ? 'is-active' : ''}`}>
+            <button type="button" className="switcher switcher-login" onClick={() => this.setActiveForm('login')}>
+              Login
+              <span className="underline"></span>
+            </button>
+            <LoginForm isActive={activeForm === 'login'} />
+          </div>
+          <div className={`form-wrapper ${activeForm === 'signup' ? 'is-active' : ''}`}>
+            <button type="button" className="switcher switcher-signup" onClick={() => this.setActiveForm('signup')}>
+              Sign Up
+              <span className="underline"></span>
+            </button>
+            <SignupForm isActive={activeForm === 'signup'} />
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    );
+  }
 }
 
-export default App
+export default App;
