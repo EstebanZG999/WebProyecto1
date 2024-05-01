@@ -1,43 +1,54 @@
 import React from 'react';
 import LoginForm from './LoginForm';
-import SignupForm from './SignupForm';
-import './App.css'; // Asegúrate de importar tus estilos aquí
+import Header from './Header';
+import Footer from './Footer';
+import Posts from './Posts';
+import './App.css';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeForm: 'login'
+      isAuthenticated: false, // Estado para controlar si el usuario está autenticado
     };
   }
 
-  setActiveForm = (formName) => {
-    this.setState({ activeForm: formName });
-  }
+  handleLogin = ({ username, password }) => {
+    const DUMMY_CREDENTIALS = {
+      username: 'admin@123',
+      password: 'admin'
+    };
+
+    if (username === DUMMY_CREDENTIALS.username && password === DUMMY_CREDENTIALS.password) {
+      this.setState({ isAuthenticated: true });
+    } else {
+      alert('Credenciales incorrectas');
+    }
+  };
 
   render() {
-    const { activeForm } = this.state;
+    const { isAuthenticated } = this.state;
+    const isAdminRoute = window.location.pathname === '/admin';
+
     return (
-      <div className="forms-section">
-        <h1 className="section-title">Animated Forms</h1>
-        <div className="forms">
-          <div className={`form-wrapper ${activeForm === 'login' ? 'is-active' : ''}`}>
-            <button type="button" className="switcher switcher-login" onClick={() => this.setActiveForm('login')}>
-              Login
-              <span className="underline"></span>
-            </button>
-            <LoginForm isActive={activeForm === 'login'} />
+      <div className="app-container">
+        <Header />
+        {isAdminRoute && !isAuthenticated ? (
+          <div className="login-container">  {/* Este div es el nuevo contenedor centrado */}
+            <div className="forms-section">
+              <h1 className="section-title">Login para Administradores</h1>
+              <LoginForm onLogin={this.handleLogin} isActive={true} />
+            </div>
           </div>
-          <div className={`form-wrapper ${activeForm === 'signup' ? 'is-active' : ''}`}>
-            <button type="button" className="switcher switcher-signup" onClick={() => this.setActiveForm('signup')}>
-              Sign Up
-              <span className="underline"></span>
-            </button>
-            <SignupForm isActive={activeForm === 'signup'} />
-          </div>
-        </div>
+        ) : (
+          <>
+            <Posts />
+            <Footer />
+          </>
+        )}
       </div>
     );
+    
   }
 }
 
