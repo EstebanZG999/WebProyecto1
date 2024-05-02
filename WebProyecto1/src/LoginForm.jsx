@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 function LoginForm({ onLogin }) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('');  // Asegúrate de que este estado se maneja correctamente
   const [password, setPassword] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onLogin({ username: email, password });
+    onLogin({ username: email, password });  // Aquí pasas el email como 'username'
   };
 
   return (
@@ -19,7 +19,7 @@ function LoginForm({ onLogin }) {
             id="login-email"
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}  // Asegúrate de que esto actualiza correctamente el estado
             required
           />
         </div>
@@ -29,7 +29,7 @@ function LoginForm({ onLogin }) {
             id="login-password"
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}  // Asegúrate de que esto actualiza correctamente el estado
             required
           />
         </div>

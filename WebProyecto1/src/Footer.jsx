@@ -10,7 +10,7 @@ export default function Footer() {
     width: '100%',
     textAlign: 'center',
     bottom: 0,
-    position: 'fixed', 
+    position: 'center', 
   };
 
   return (

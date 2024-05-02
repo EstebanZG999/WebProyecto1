@@ -1,55 +1,51 @@
-import React from 'react';
-import LoginForm from './LoginForm';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Posts from './Posts';
+import LoginForm from './LoginForm';
+import CrudPage from './CrudPage';
 import './App.css';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAuthenticated: false, // Estado para controlar si el usuario está autenticado
-    };
-  }
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  handleLogin = ({ username, password }) => {
+  const handleLogin = (navigate, { username, password }) => {
+    console.log(`Username: ${username}, Password: ${password}`); // Esto mostrará en consola los valores ingresados.
+  
     const DUMMY_CREDENTIALS = {
       username: 'admin@123',
       password: 'admin'
     };
-
+  
     if (username === DUMMY_CREDENTIALS.username && password === DUMMY_CREDENTIALS.password) {
-      this.setState({ isAuthenticated: true });
+      setIsAuthenticated(true);
+      navigate('/endpoints'); // Redirige al usuario a la ruta de CRUD
     } else {
       alert('Credenciales incorrectas');
     }
   };
+  
+  
 
-  render() {
-    const { isAuthenticated } = this.state;
-    const isAdminRoute = window.location.pathname === '/admin';
-
-    return (
+  return (
+    <Router>
       <div className="app-container">
         <Header />
-        {isAdminRoute && !isAuthenticated ? (
-          <div className="login-container">  {/* Este div es el nuevo contenedor centrado */}
-            <div className="forms-section">
-              <h1 className="section-title">Login para Administradores</h1>
-              <LoginForm onLogin={this.handleLogin} isActive={true} />
-            </div>
-          </div>
-        ) : (
-          <>
-            <Posts />
-            <Footer />
-          </>
-        )}
+        <Routes>
+          <Route path="/" element={<Posts />} />
+          <Route path="/admin" element={<LoginFormWrapper onLogin={handleLogin} isAuthenticated={isAuthenticated} />} />
+          <Route path="/endpoints" element={<CrudPage />} />
+        </Routes>
       </div>
-    );
-    
-  }
+      <Footer />
+    </Router>
+  );
+}
+
+function LoginFormWrapper({ onLogin, isAuthenticated }) {
+  const navigate = useNavigate();  // Asegúrate de que useNavigate está siendo usado correctamente dentro de un componente.
+  return isAuthenticated ? <Navigate replace to="/endpoints" /> : <LoginForm onLogin={(credentials) => onLogin(navigate, credentials)} />;
 }
 
 export default App;
