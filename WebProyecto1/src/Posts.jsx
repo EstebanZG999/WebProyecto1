@@ -4,10 +4,10 @@ import Card from './Card';
 export default function Posts() {
     const containerStyle = {
         display: 'flex',
-        justifyContent: 'center', // Centrar los elementos horizontalmente en el contenedor
-        alignItems: 'center', // Centrar los elementos verticalmente en el contenedor
-        flexWrap: 'wrap', // Permite que los elementos se envuelvan en la pantalla
-        height: '100%', // 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        flexWrap: 'wrap', 
+        height: '100%', 
     };
     const [posts, setPosts] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true); 
