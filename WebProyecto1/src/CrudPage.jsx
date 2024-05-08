@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getPosts, createPost, updatePost, deletePost } from '../api/api';
-import './App.css'; // Asegúrate de importar tus estilos aquí
+import './App.css'; 
 
 function CrudPage() {
     const [posts, setPosts] = useState([]);

@@ -1,26 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';  
 
-function LoginForm({ onLogin }) {
-  const [email, setEmail] = useState('');  // Asegúrate de que este estado se maneja correctamente
+function LoginForm() {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onLogin({ username: email, password });  // Aquí pasas el email como 'username'
+    try {
+      const response = await fetch('https://api.tiburoncin.lat/22119/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        login({ username }, data.token);  
+        navigate('/endpoints'); 
+      } else {
+        throw new Error(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Error al iniciar sesión, por favor verifica tus credenciales e inténtalo de nuevo.');
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="form form-login">
       <fieldset>
-        <legend>Please, enter your email and password for login.</legend>
+        <legend>Please, enter your username and password for login.</legend>
         <div className="input-block">
-          <label htmlFor="login-email">E-mail</label>
+          <label htmlFor="login-username">Username</label>
           <input
-            id="login-email"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}  // Asegúrate de que esto actualiza correctamente el estado
-            required
+            id="login-username"
+            type="text"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            required 
           />
         </div>
         <div className="input-block">
@@ -29,12 +50,12 @@ function LoginForm({ onLogin }) {
             id="login-password"
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}  // Asegúrate de que esto actualiza correctamente el estado
-            required
+            onChange={e => setPassword(e.target.value)}
+            required 
           />
         </div>
+        <button type="submit" className="btn-login">Login</button>
       </fieldset>
-      <button type="submit" className="btn-login">Login</button>
     </form>
   );
 }
